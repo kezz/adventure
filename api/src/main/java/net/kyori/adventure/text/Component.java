@@ -1637,6 +1637,16 @@ public interface Component extends ComponentBuilderApplicable, ComponentLike, Ex
   }
 
   /**
+   * Tests if this component contains any {@link TranslatableComponent}s.
+   *
+   * @return {@code true} if this component is translatable, {@code false} otherwise
+   * @since 7.8.0
+   */
+  default boolean isTranslatable() {
+    return false;
+  }
+
+  /**
    * Finds and replaces any text with this or child {@link Component}s using the configured options.
    *
    * @param configurer the configurer

@@ -115,6 +115,14 @@ public abstract class AbstractComponent implements Component {
   }
 
   @Override
+  public boolean isTranslatable() {
+    for (Component child : this.children) {
+      if (child.isTranslatable()) return true;
+    }
+    return false;
+  }
+
+  @Override
   public boolean equals(final @Nullable Object other) {
     if(this == other) return true;
     if(!(other instanceof AbstractComponent)) return false;
