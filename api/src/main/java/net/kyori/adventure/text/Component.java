@@ -30,6 +30,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.Spliterator;
+import java.util.Spliterators;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -95,7 +97,7 @@ import org.jetbrains.annotations.Unmodifiable;
  * @since 4.0.0
  */
 @ApiStatus.NonExtendable
-public interface Component extends ComponentBuilderApplicable, ComponentLike, Examinable, HoverEventSource<Component> {
+public interface Component extends ComponentBuilderApplicable, ComponentLike, Examinable, HoverEventSource<Component>, Iterable<Component> {
   /**
    * A predicate that checks equality of two {@code Component}s using {@link Objects#equals(Object, Object)}.
    *
@@ -108,7 +110,6 @@ public interface Component extends ComponentBuilderApplicable, ComponentLike, Ex
    * @since 4.8.0
    */
   BiPredicate<? super Component, ? super Component> EQUALS_IDENTITY = (a, b) -> a == b;
-
   /**
    * Gets an empty component.
    *
@@ -1914,6 +1915,18 @@ public interface Component extends ComponentBuilderApplicable, ComponentLike, Ex
    */
   @Contract(pure = true)
   @NotNull Component replaceText(final @NotNull TextReplacementConfig config);
+
+  /**
+   * Returns a breadth-first iterator over this component and it's children.
+   * <p>As components are immutable, this iterator does not support removal.</p>
+   *
+   * @return the iterator
+   * @since 4.8.0
+   */
+  @Override
+  default @NonNull Iterator<Component> iterator() {
+    return ComponentIterator.iterator(this, ComponentIterator.Type.BREADTH_FIRST);
+  }
 
   /**
    * Finds and replaces text within any {@link Component}s using a string literal.
