@@ -98,7 +98,7 @@ import org.jetbrains.annotations.Unmodifiable;
  * @since 4.0.0
  */
 @ApiStatus.NonExtendable
-public interface Component extends ComponentBuilderApplicable, ComponentLike, Examinable, HoverEventSource<Component>, Iterable<Component> {
+public interface Component extends ComponentBuilderApplicable, ComponentLike, Examinable, HoverEventSource<Component> {
   /**
    * A predicate that checks equality of two {@code Component}s using {@link Objects#equals(Object, Object)}.
    *
@@ -111,6 +111,7 @@ public interface Component extends ComponentBuilderApplicable, ComponentLike, Ex
    * @since 4.8.0
    */
   BiPredicate<? super Component, ? super Component> EQUALS_IDENTITY = (a, b) -> a == b;
+
   /**
    * Gets an empty component.
    *
@@ -1918,35 +1919,20 @@ public interface Component extends ComponentBuilderApplicable, ComponentLike, Ex
   @NotNull Component replaceText(final @NotNull TextReplacementConfig config);
 
   /**
-   * Creates an iterable over this component with a given type.
+   * Returns an iterable view of this component.
    *
    * @param type the type
    * @return the iterable
    * @see ComponentIteratorType
    * @since 4.8.0
    */
-  default @NonNull Iterable<Component> iterable(final @NonNull ComponentIteratorType type) {
+  default @NotNull Iterable<Component> iterable(final @NotNull ComponentIteratorType type) {
     Objects.requireNonNull(type, "type");
-    if(type == ComponentIteratorType.defaultType()) return this;
     return new ForwardingIterator<>(() -> this.iterator(type), () -> this.spliterator(type));
   }
 
   /**
-   * Returns an iterator over this component and it's children using the default iterator type.
-   *
-   * <p>As components are immutable, this iterator does not support removal.</p>
-   *
-   * @return the iterator
-   * @see ComponentIteratorType#defaultType()
-   * @since 4.8.0
-   */
-  @Override
-  default @NonNull Iterator<Component> iterator() {
-    return this.iterator(ComponentIteratorType.defaultType());
-  }
-
-  /**
-   * Returns an iterator of a given type over this component and it's children.
+   * Returns an iterator for this component.
    *
    * <p>As components are immutable, this iterator does not support removal.</p>
    *
@@ -1955,26 +1941,12 @@ public interface Component extends ComponentBuilderApplicable, ComponentLike, Ex
    * @see ComponentIteratorType
    * @since 4.8.0
    */
-  default @NonNull Iterator<Component> iterator(final @NonNull ComponentIteratorType type) {
+  default @NotNull Iterator<Component> iterator(final @NotNull ComponentIteratorType type) {
     return new ComponentIterator(this, type);
   }
 
   /**
-   * Returns a spliterator over this component backed by an iterator with the default type.
-   *
-   * <p>The resulting spliterator has the {@link Spliterator#IMMUTABLE}, {@link Spliterator#NONNULL} and {@link Spliterator#ORDERED} characteristics.</p>
-   *
-   * @return the iterator
-   * @see ComponentIteratorType#defaultType()
-   * @since 4.8.0
-   */
-  @Override
-  default @NonNull Spliterator<Component> spliterator() {
-    return this.spliterator(ComponentIteratorType.defaultType());
-  }
-
-  /**
-   * Returns a spliterator over this component backed by an iterator with a given type.
+   * Returns a spliterator for this component.
    *
    * <p>The resulting spliterator has the {@link Spliterator#IMMUTABLE}, {@link Spliterator#NONNULL} and {@link Spliterator#ORDERED} characteristics.</p>
    *
@@ -1983,7 +1955,7 @@ public interface Component extends ComponentBuilderApplicable, ComponentLike, Ex
    * @see ComponentIteratorType
    * @since 4.8.0
    */
-  default @NonNull Spliterator<Component> spliterator(final @NonNull ComponentIteratorType type) {
+  default @NotNull Spliterator<Component> spliterator(final @NotNull ComponentIteratorType type) {
     return Spliterators.spliteratorUnknownSize(this.iterator(type), Spliterator.IMMUTABLE & Spliterator.NONNULL & Spliterator.ORDERED);
   }
 
