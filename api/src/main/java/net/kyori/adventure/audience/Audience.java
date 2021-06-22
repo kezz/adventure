@@ -404,7 +404,13 @@ public interface Audience extends Pointered {
    * @see Title
    * @since 4.0.0
    */
+  @ForwardingAudienceOverrideNotRequired
   default void showTitle(final @NotNull Title title) {
+    this.sendTitlePart(TitlePart.TITLE, title.title());
+    this.sendTitlePart(TitlePart.SUBTITLE, title.subtitle());
+
+    final Title.Times times = title.times();
+    if (times != null) this.sendTitlePart(TitlePart.TIMES, times);
   }
 
   /**
