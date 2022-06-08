@@ -23,22 +23,47 @@
  */
 package net.kyori.adventure.audience;
 
+import net.kyori.adventure.chat.ChatType;
+import net.kyori.adventure.key.Key;
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Message types.
  *
  * @since 4.0.0
+ * @deprecated for removal since 4.12.0, use corresponding {@link ChatType} instead
  */
-public enum MessageType {
+@ApiStatus.ScheduledForRemoval(inVersion = "5.0.0")
+@Deprecated
+public enum MessageType implements ChatType {
   /**
    * Chat message type.
    *
    * @since 4.0.0
+   * @deprecated for removal since 4.12.0, use {@link ChatType#CHAT} instead
    */
-  CHAT,
+  @ApiStatus.ScheduledForRemoval(inVersion = "5.0.0")
+  @Deprecated
+  CHAT(ChatType.CHAT),
   /**
    * System message type.
    *
    * @since 4.0.0
+   * @deprecated for removal since 4.12.0, use {@link ChatType#SYSTEM} instead
    */
-  SYSTEM;
+  @ApiStatus.ScheduledForRemoval(inVersion = "5.0.0")
+  @Deprecated
+  SYSTEM(ChatType.SYSTEM);
+
+  private final ChatType chatType;
+
+  MessageType(final @NotNull ChatType chatType) {
+    this.chatType = chatType;
+  }
+
+  @Override
+  public final @NotNull Key key() {
+    return this.chatType.key();
+  }
 }
